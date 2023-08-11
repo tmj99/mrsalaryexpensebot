@@ -19,10 +19,16 @@ bot.add_custom_filter(IsAdmin())
 
 @bot.message_handler(is_admin=True,commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "Hello! Time to track some expenses")
+    bot.reply_to(message, """Hello! Let me help you track your expenses!
+    To enter a new expense, use the spent command with the following format:
+    /spent _amount_;_description_
+    """)
 
-@bot.message_handler(is_admin=True, func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, message.text)
+@bot.message_handler(is_admin=True,commands=['spent'])
+def spent(message):
+    message_strung = message.text.split(";",1)
+    expense_cost = message_strung[0]
+    expense_item = message_strung[1]
+    bot.reply_to(message, """You just {} on {}""".format(expense_cost, expense_item))
 
 bot.infinity_polling()
